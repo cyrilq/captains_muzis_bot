@@ -3,7 +3,6 @@ from datetime import datetime
 import telebot
 from telebot import types
 import datetime
-from telebot import types
 
 API_TOKEN = '245708423:AAFPl1DZrUFrNiH-0FhFtxr4ZDEll0ukEsQ'
 bot = telebot.TeleBot(API_TOKEN)
@@ -59,20 +58,21 @@ def main_func(s):
     user_request = Request()
     s = re.sub(r'[^\w\s]', '', s)
     s_splitted = s.split()
-    for _ in range(len(s_splitted)):
+    '''for _ in range(len(s_splitted)):
         s_splitted[_] = s_splitted[_].lower()
         if represents_int(s_splitted[_]):
             if 1990 < s_splitted < 2016:
                 user_request.date = int(s_splitted[_])
-                s_splitted.pop(_)
+                s_splitted.pop(_)'''
     return s_splitted
 
 
 def check_hello(s):
     for _ in range(len(hello)):
         if hello[_] in main_func(s):
-            print('Добрейший вечерочек!')
+            return True
             break
+        else: return False
     check_daytime()
 
 
@@ -80,22 +80,33 @@ def check_daytime():
     now = datetime.datetime.now().hour
     print(now)
     if 0 <= now <= 5:
-        print('у меня есть плейлист для этой ночи!')
+        return 'night'
     elif 5 < now < 12:
-        print('надеюсь, это утро у вас проходит хорошо. почему бы не послушать этот плейлист?')
+        return 'morning'
     elif 12 <= now <= 18:
-        print('надеюсь, этот день у вас проходит хорошо. почему бы не послушать этот плейлист?')
+        return 'day'
     else:
-        print('надеюсь, этот вечер у вас проходит хорошо. почему бы не послушать этот плейлист?')
+        return 'evening'
 
 
 @bot.message_handler(content_types=['text'])
-def answer_message(message):
-    
+def rate_the_song(message):
+    try:
+        if check_hello(message.text):
+            bot.send_message(message.chat.id, 'Привет!')
+            if check_daytime() == 'night':
+                bot.send_message(message.chat.id, 'Для этой ночи я подготовил такой плейлист:')
+            if check_daytime() == 'morning':
+                bot.send_message(message.chat.id, 'Доброе утро! Вот твой сегодняшний плейлист:')
+            if check_daytime() == 'day':
+                bot.send_message(message.chat.id, 'Доброго дня! Вот твой плейлист на сегодня:')
+            if check_daytime() == 'evening':
+                bot.send_message(message.chat.id, 'Этим вечером тебе определённо понравится послушать это:')
+    except: print('Что-то пошло не так...')
     keyboard = types.InlineKeyboardMarkup()
-    like_button = types.InlineKeyboardButton('LIKE', callback_data='1')
-    not_sure_button = types.InlineKeyboardButton('NOT SURE...', callback_data='2')
-    dislike_button = types.InlineKeyboardButton('DISLIKE', callback_data='3')
+    like_button = types.InlineKeyboardButton('👍', callback_data='1')
+    not_sure_button = types.InlineKeyboardButton('🤔', callback_data='2')
+    dislike_button = types.InlineKeyboardButton('👎', callback_data='3')
     keyboard.add(dislike_button, not_sure_button, like_button)
     bot.send_message(message.chat.id, 'Оцените песню: ', reply_markup=keyboard)
 
@@ -104,10 +115,10 @@ def answer_message(message):
 def callback_inline(call):
     if call.message:
         if call.data == '1':
-            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Спасибо! Мы больше не будет отправлять вам этот трек')
+            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Спасибо за отзыв 😉')
         if call.data == '2':
-            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=None)
-        if call.data == '3':
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Спасибо за отзыв')
+        if call.data == '3':
+            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Спасибо! Мы больше не будет отправлять вам этот трек')
 if __name__ == '__main__':
     bot.polling(none_stop=True)
