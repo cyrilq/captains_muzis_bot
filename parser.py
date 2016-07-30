@@ -1,5 +1,15 @@
 import re
+from datetime import datetime
+import telebot
+from telebot import types
+import datetime
+from telebot import types
+
+API_TOKEN = '245708423:AAFPl1DZrUFrNiH-0FhFtxr4ZDEll0ukEsQ'
+bot = telebot.TeleBot(API_TOKEN)
+
 hello = ['привет', 'здравствуй', 'здравствуйте', 'hello', 'приветствую']
+
 
 class Request:
     artist = ''
@@ -57,12 +67,46 @@ def main_func(s):
                 s_splitted.pop(_)
     return s_splitted
 
+
 def check_hello(s):
-    i = 0
     for _ in range(len(hello)):
         if hello[_] in main_func(s):
             print('Добрейший вечерочек!')
             break
+    check_daytime()
 
-user_string = input()
-check_hello(user_string)
+
+def check_daytime():
+    now = datetime.datetime.now().hour
+    print(now)
+    if 0 <= now <= 5:
+        print('у меня есть плейлист для этой ночи!')
+    elif 5 < now < 12:
+        print('надеюсь, это утро у вас проходит хорошо. почему бы не послушать этот плейлист?')
+    elif 12 <= now <= 18:
+        print('надеюсь, этот день у вас проходит хорошо. почему бы не послушать этот плейлист?')
+    else:
+        print('надеюсь, этот вечер у вас проходит хорошо. почему бы не послушать этот плейлист?')
+
+
+@bot.message_handler(content_types=['text'])
+def answer_message(message):
+    
+    keyboard = types.InlineKeyboardMarkup()
+    like_button = types.InlineKeyboardButton('LIKE', callback_data='1')
+    not_sure_button = types.InlineKeyboardButton('NOT SURE...', callback_data='2')
+    dislike_button = types.InlineKeyboardButton('DISLIKE', callback_data='3')
+    keyboard.add(dislike_button, not_sure_button, like_button)
+    bot.send_message(message.chat.id, 'Оцените песню: ', reply_markup=keyboard)
+
+
+@bot.callback_query_handler(func=lambda call: True)
+def callback_inline(call):
+    if call.message:
+        if call.data == '1':
+            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='DONE!')
+        if call.data == '2':
+            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='DONE!')
+
+if __name__ == '__main__':
+    bot.polling(none_stop=True)
