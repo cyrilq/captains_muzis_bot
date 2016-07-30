@@ -104,9 +104,10 @@ def answer_message(message):
 def callback_inline(call):
     if call.message:
         if call.data == '1':
-            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='DONE!')
+            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Спасибо! Мы больше не будет отправлять вам этот трек')
         if call.data == '2':
-            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='DONE!')
-
+            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text=None)
+        if call.data == '3':
+            bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Спасибо за отзыв')
 if __name__ == '__main__':
     bot.polling(none_stop=True)
