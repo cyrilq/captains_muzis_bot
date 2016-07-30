@@ -3,6 +3,7 @@ from datetime import datetime
 import telebot
 from telebot import types
 import datetime
+from telebot import types
 
 API_TOKEN = '245708423:AAFPl1DZrUFrNiH-0FhFtxr4ZDEll0ukEsQ'
 bot = telebot.TeleBot(API_TOKEN)
@@ -56,14 +57,8 @@ def represents_int(s):
 
 def main_func(s):
     user_request = Request()
-    s = re.sub(r'[^\w\s]', '', s)
+    s = re.sub(r'[^\w\s]', '', s).lower()
     s_splitted = s.split()
-    '''for _ in range(len(s_splitted)):
-        s_splitted[_] = s_splitted[_].lower()
-        if represents_int(s_splitted[_]):
-            if 1990 < s_splitted < 2016:
-                user_request.date = int(s_splitted[_])
-                s_splitted.pop(_)'''
     return s_splitted
 
 
@@ -107,7 +102,7 @@ def rate_the_song(message):
     like_button = types.InlineKeyboardButton('👍', callback_data='1')
     not_sure_button = types.InlineKeyboardButton('🤔', callback_data='2')
     dislike_button = types.InlineKeyboardButton('👎', callback_data='3')
-    keyboard.add(dislike_button, not_sure_button, like_button)
+    keyboard.add(like_button, not_sure_button, dislike_button)
     bot.send_message(message.chat.id, 'Оцените песню: ', reply_markup=keyboard)
 
 
@@ -122,3 +117,12 @@ def callback_inline(call):
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Спасибо! Мы больше не будет отправлять вам этот трек')
 if __name__ == '__main__':
     bot.polling(none_stop=True)
+
+
+@bot.message_handler(commands='help')
+def send_welcome(message):
+    list_of_commands = '''Список команд:\n/random — случайный трек\n/top3 — 3 лучших трека недели\n/top5 — 5 лучших треков недели\n/delivery — включить подписку\n'''
+    bot.send_message(message.chat.id, list_of_commands)
+    keyboard = types.InlineKeyboardMarkup()
+    url_button = types.InlineKeyboardButton(text='Конкурс BudgetApps', url='http://budgetapps.ru/contest')
+    keyboard.add(url_button)
