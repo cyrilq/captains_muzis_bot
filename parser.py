@@ -3,7 +3,6 @@ from datetime import datetime
 import telebot
 from telebot import types
 import datetime
-from telebot import types
 
 API_TOKEN = '245708423:AAFPl1DZrUFrNiH-0FhFtxr4ZDEll0ukEsQ'
 bot = telebot.TeleBot(API_TOKEN)
