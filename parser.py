@@ -8,7 +8,9 @@ API_TOKEN = '245708423:AAFPl1DZrUFrNiH-0FhFtxr4ZDEll0ukEsQ'
 bot = telebot.TeleBot(API_TOKEN)
 
 hello = ['привет', 'здравствуй', 'здравствуйте', 'hello', 'приветствую']
-
+cafe = ['кафе', 'ресторан', 'ресторане']
+metro = ['метро', 'подземка', 'подземку']
+hackathon = ['хакатон', 'хакатоне', 'хакатону', 'хакатоном']
 
 class Request:
     artist = ''
@@ -70,9 +72,32 @@ def check_hello(s):
     check_daytime()
 
 
+def check_cafe(s):
+    for _ in range(len(cafe)):
+        if cafe[_] in main_func(s):
+            return True
+            break
+        else: return False
+
+
+def check_metro(s):
+    for _ in range(len(metro)):
+        if metro[_] in main_func(s):
+            return True
+            break
+        else: return False
+
+
+def check_hackathon(s):
+    for _ in range(len(hackathon)):
+        if hackathon[_] in main_func(s):
+            return True
+            break
+        else: return False
+
+
 def check_daytime():
     now = datetime.datetime.now().hour
-    print(now)
     if 0 <= now <= 5:
         return 'night'
     elif 5 < now < 12:
@@ -81,6 +106,24 @@ def check_daytime():
         return 'day'
     else:
         return 'evening'
+
+
+
+keyboard = types.InlineKeyboardMarkup()
+like_button = types.InlineKeyboardButton('👍', callback_data='1')
+not_sure_button = types.InlineKeyboardButton('🤔', callback_data='2')
+dislike_button = types.InlineKeyboardButton('👎', callback_data='3')
+keyboard.add(like_button, not_sure_button, dislike_button)
+
+
+@bot.message_handler(commands=['help'])
+def send_welcome(message):
+    list_of_commands = '''Список команд:\n/random — случайный трек\n/top3 — 3 лучших трека недели\n/top5 — 5 лучших треков недели\n/delivery — включить подписку\n'''
+    bot.send_message(message.chat.id, list_of_commands)
+    keyboard = types.InlineKeyboardMarkup()
+    url_button = types.InlineKeyboardButton(text='Hackathon по чатботам и AI', url='http://hackathon.muzis.ru')
+    keyboard.add(url_button)
+    bot.send_message(message.chat.id, 'Больше информации о хакатоне:', reply_markup=keyboard)
 
 
 @bot.message_handler(content_types=['text'])
@@ -96,12 +139,15 @@ def rate_the_song(message):
                 bot.send_message(message.chat.id, 'Доброго дня! Вот твой плейлист на сегодня:')
             if check_daytime() == 'evening':
                 bot.send_message(message.chat.id, 'Этим вечером тебе определённо понравится послушать это:')
+        elif check_cafe(message.text):
+            bot.send_message(message.chat.id, 'У меня как раз есть плейлист для кафе!')
+        elif check_metro(message.text):
+            bot.send_message(message.chat.id, 'С этим плейлистом время в метро пройдет быстрее:')
+        elif check_hackathon(message.text):
+            bot.send_message(message.chat.id, 'С этим плейлистом на хакатоне будет веселее и работа, надеюсь, пойдет продуктивнее:')
+
     except: print('Что-то пошло не так...')
-    keyboard = types.InlineKeyboardMarkup()
-    like_button = types.InlineKeyboardButton('👍', callback_data='1')
-    not_sure_button = types.InlineKeyboardButton('🤔', callback_data='2')
-    dislike_button = types.InlineKeyboardButton('👎', callback_data='3')
-    keyboard.add(like_button, not_sure_button, dislike_button)
+
     bot.send_message(message.chat.id, 'Оцените песню: ', reply_markup=keyboard)
 
 
@@ -116,12 +162,3 @@ def callback_inline(call):
             bot.edit_message_text(chat_id=call.message.chat.id, message_id=call.message.message_id, text='Спасибо! Мы больше не будет отправлять вам этот трек')
 if __name__ == '__main__':
     bot.polling(none_stop=True)
-
-
-@bot.message_handler(commands='help')
-def send_welcome(message):
-    list_of_commands = '''Список команд:\n/random — случайный трек\n/top3 — 3 лучших трека недели\n/top5 — 5 лучших треков недели\n/delivery — включить подписку\n'''
-    bot.send_message(message.chat.id, list_of_commands)
-    keyboard = types.InlineKeyboardMarkup()
-    url_button = types.InlineKeyboardButton(text='Конкурс BudgetApps', url='http://budgetapps.ru/contest')
-    keyboard.add(url_button)
