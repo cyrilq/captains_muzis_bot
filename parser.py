@@ -125,6 +125,25 @@ def send_welcome(message):
     keyboard.add(url_button)
     bot.send_message(message.chat.id, 'Больше информации о хакатоне:', reply_markup=keyboard)
 
+@bot.message_handler(commands=["random"])
+def random_music(message):
+
+    # create a client object with your app credentials
+    client = soundcloud.Client(client_id='5011e3c314883958b531b8cfde500751')
+    n = random.randint(-1, 4)
+    track = ['nelson-jaee-loyalty', '293', 'fetty-wap-wake-up',
+             'famous-dex-what-got-into-me', 'famous-dex-ok-dexter']
+    if n == -1:
+        bot_muzis.send_message(message.chat.id, 'http://f.muzis.ru/p08vf5c9fl1q.mp3')
+    else:
+
+        track = client.get('/tracks/' + track[n])
+    # get the tracks streaming URL
+        stream_url = client.get(track.stream_url, allow_redirects=False)
+
+    # print the tracks stream URL
+        bot.send_message(message.chat.id, stream_url.location)
+
 
 @bot.message_handler(content_types=['text'])
 def rate_the_song(message):
