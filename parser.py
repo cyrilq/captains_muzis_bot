@@ -11,6 +11,7 @@ hello = ['привет', 'здравствуй', 'здравствуйте', 'he
 cafe = ['кафе', 'ресторан', 'ресторане']
 metro = ['метро', 'подземка', 'подземку']
 hackathon = ['хакатон', 'хакатоне', 'хакатону', 'хакатоном']
+kind_of_music = ['энергичная', 'спокойная', 'тихая', 'громкая', 'интенсивная', 'классическая', 'академическая', 'странная', '']
 
 class Request:
     artist = ''
@@ -108,6 +109,18 @@ def check_daytime():
         return 'evening'
 
 
+def check_kind_of_music(s):
+    i = 0
+    index_of_the_most_likely_variant = -1
+    min_value = 255
+    for _ in range(len(kind_of_music)):
+        if distance(main_func(s).lower(), kind_of_music[_]) < 3:
+            min_value = distance(main_func(s).lower(), kind_of_music[_])
+            index_of_the_most_likely_variant = i
+        i += 1
+    return kind_of_music[index_of_the_most_likely_variant]
+
+
 
 keyboard = types.InlineKeyboardMarkup()
 like_button = types.InlineKeyboardButton('👍', callback_data='1')
@@ -128,25 +141,27 @@ def send_welcome(message):
 
 @bot.message_handler(content_types=['text'])
 def rate_the_song(message):
-    try:
-        if check_hello(message.text):
-            bot.send_message(message.chat.id, 'Привет!')
-            if check_daytime() == 'night':
-                bot.send_message(message.chat.id, 'Для этой ночи я подготовил такой плейлист:')
-            if check_daytime() == 'morning':
-                bot.send_message(message.chat.id, 'Доброе утро! Вот твой сегодняшний плейлист:')
-            if check_daytime() == 'day':
-                bot.send_message(message.chat.id, 'Доброго дня! Вот твой плейлист на сегодня:')
-            if check_daytime() == 'evening':
-                bot.send_message(message.chat.id, 'Этим вечером тебе определённо понравится послушать это:')
-        elif check_cafe(message.text):
-            bot.send_message(message.chat.id, 'У меня как раз есть плейлист для кафе!')
-        elif check_metro(message.text):
-            bot.send_message(message.chat.id, 'С этим плейлистом время в метро пройдет быстрее:')
-        elif check_hackathon(message.text):
-            bot.send_message(message.chat.id, 'С этим плейлистом на хакатоне будет веселее и работа, надеюсь, пойдет продуктивнее:')
 
-    except: print('Что-то пошло не так...')
+    if check_hello(message.text):
+        bot.send_message(message.chat.id, 'Привет!')
+        if check_daytime() == 'night':
+            bot.send_message(message.chat.id, 'Для этой ночи я подготовил такой плейлист:')
+        if check_daytime() == 'morning':
+            bot.send_message(message.chat.id, 'Доброе утро! Вот твой сегодняшний плейлист:')
+        if check_daytime() == 'day':
+            bot.send_message(message.chat.id, 'Доброго дня! Вот твой плейлист на сегодня:')
+        if check_daytime() == 'evening':
+            bot.send_message(message.chat.id, 'Этим вечером тебе определённо понравится послушать это:')
+    elif check_cafe(message.text):
+        bot.send_message(message.chat.id, 'У меня как раз есть плейлист для кафе!')
+    elif check_metro(message.text):
+        bot.send_message(message.chat.id, 'С этим плейлистом время в метро пройдет быстрее:')
+    elif check_hackathon(message.text):
+        bot.send_message(message.chat.id, 'С этим плейлистом на хакатоне будет веселее и работа, надеюсь, пойдет продуктивнее:')
+    elif check_kind_of_music(message.text) != '':
+        bot.send_message(message.chat.id, 'Вас интересует ' + check_kind_of_music(message.text) + ' вид музыки?')
+
+    print('Что-то пошло не так...')
 
     bot.send_message(message.chat.id, 'Оцените песню: ', reply_markup=keyboard)
 
