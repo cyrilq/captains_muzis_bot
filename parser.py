@@ -3,14 +3,17 @@ from datetime import datetime
 import telebot
 from telebot import types
 import datetime
+import soundcloud
+import random
 
 API_TOKEN = '245708423:AAFPl1DZrUFrNiH-0FhFtxr4ZDEll0ukEsQ'
 bot = telebot.TeleBot(API_TOKEN)
 
-hello = ['привет', 'здравствуй', 'здравствуйте', 'hello', 'приветствую']
+hello = ['привет', 'здравствуй', 'здравствуйте', 'hello', 'приветствую', 'шалом', 'ассалам алейкум']
 cafe = ['кафе', 'ресторан', 'ресторане']
 metro = ['метро', 'подземка', 'подземку']
 hackathon = ['хакатон', 'хакатоне', 'хакатону', 'хакатоном']
+kind_of_music = ['энергичная', 'спокойная', 'тихая', 'громкая', 'интенсивная', 'классическая', 'академическая', 'странная', '']
 
 class Request:
     artist = ''
@@ -57,8 +60,8 @@ def represents_int(s):
 
 
 def main_func(s):
-    user_request = Request()
-    s = re.sub(r'[^\w\s]', '', s).lower()
+    s = s.lower()
+    s = re.sub(r'[^\w\s]', '', s)
     s_splitted = s.split()
     return s_splitted
 
@@ -108,6 +111,19 @@ def check_daytime():
         return 'evening'
 
 
+def check_kind_of_music(s):
+    i = 0
+    index_of_the_most_likely_variant = -1
+    min_value = 255
+    for _ in range(len(kind_of_music)):
+        for k in range(len(main_func(s))):
+            if distance(main_func(s)[k], kind_of_music[_]) < 3:
+                min_value = distance(main_func(s)[k], kind_of_music[_])
+                index_of_the_most_likely_variant = i
+            i += 1
+    return kind_of_music[index_of_the_most_likely_variant]
+
+
 
 keyboard = types.InlineKeyboardMarkup()
 like_button = types.InlineKeyboardButton('👍', callback_data='1')
@@ -125,6 +141,7 @@ def send_welcome(message):
     keyboard.add(url_button)
     bot.send_message(message.chat.id, 'Больше информации о хакатоне:', reply_markup=keyboard)
 
+
 @bot.message_handler(commands=["random"])
 def random_music(message):
 
@@ -134,7 +151,7 @@ def random_music(message):
     track = ['nelson-jaee-loyalty', '293', 'fetty-wap-wake-up',
              'famous-dex-what-got-into-me', 'famous-dex-ok-dexter']
     if n == -1:
-        bot_muzis.send_message(message.chat.id, 'http://f.muzis.ru/p08vf5c9fl1q.mp3')
+        bot.send_message(message.chat.id, 'http://f.muzis.ru/p08vf5c9fl1q.mp3')
     else:
 
         track = client.get('/tracks/' + track[n])
@@ -147,7 +164,7 @@ def random_music(message):
 
 @bot.message_handler(content_types=['text'])
 def rate_the_song(message):
-    try:
+    try: 
         if check_hello(message.text):
             bot.send_message(message.chat.id, 'Привет!')
             if check_daytime() == 'night':
@@ -164,6 +181,8 @@ def rate_the_song(message):
             bot.send_message(message.chat.id, 'С этим плейлистом время в метро пройдет быстрее:')
         elif check_hackathon(message.text):
             bot.send_message(message.chat.id, 'С этим плейлистом на хакатоне будет веселее и работа, надеюсь, пойдет продуктивнее:')
+        elif check_kind_of_music(message.text) != '':
+            bot.send_message(message.chat.id, 'Вас интересует ' + check_kind_of_music(message.text) + ' музыка?')
 
     except: print('Что-то пошло не так...')
 
