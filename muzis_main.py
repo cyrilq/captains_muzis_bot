@@ -17,33 +17,6 @@ hackathon = ['хакатон', 'хакатоне', 'хакатону', 'хака
 kind_of_music = ['энергичная', 'спокойная', 'тихая', 'громкая', 'интенсивная', 'классическая','классика', 'академическая', 'странная', '']
 
 
-calm =['digy-tragedy-ft-kirsch',
-'trey-songz-chill-prod-by-saaj-x-drewsthatdude',
-'laurel-shells-ex-boyfriend-remix-chill-premiere',
-'ark-patrol-primo',
-'solstis-oddeeo-robot-daydream',
-'nude-wish-i-had-it-all-ft-jeune-faune',
-'jason-burns-sarah-winters-1',
-'293',
-'occult-muse-premiere']
-
-energetic = ['the-kids-arent-alright-the-offspring',
-'the-offspring-youre-gonna-go-far-kid',
-'cake-by-the-ocean-dnce',
-'nightcore-all-the-things-she',
-'what-now-r3hab-edit-remix',
-'eminem-elevator',
-'the-game-dont-shoot-ft-rick-ross-2-chainz-diddy-fabolous-wale-dj-khaled-swizz-beatz',
-'tech-n9ne-feat-ceza-jl-uso',
-'guerilla-radio-rage-against-the-machine-cover']
-
-classic = ['eine-kleine-nachtmusik',
-'mozart-turkish-march',
-'symphony-no-35-in-d-major-k-385-i-allegro-con-spirito',
-'johann-sebastian-bach-pachelbels-cannon-in-d-major',
-'johann-sebastian-bach-violin',
-'sets/classic-bethoven']
-
 class Request:
     artist = ''
     album = ''
