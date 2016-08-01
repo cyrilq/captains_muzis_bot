@@ -17,32 +17,6 @@ hackathon = ['хакатон', 'хакатоне', 'хакатону', 'хака
 kind_of_music = ['энергичная', 'спокойная', 'тихая', 'громкая', 'интенсивная', 'классическая','классика', 'академическая', 'странная', '']
 
 
-calm =['digy-tragedy-ft-kirsch',
-'trey-songz-chill-prod-by-saaj-x-drewsthatdude',
-'laurel-shells-ex-boyfriend-remix-chill-premiere',
-'ark-patrol-primo',
-'solstis-oddeeo-robot-daydream',
-'nude-wish-i-had-it-all-ft-jeune-faune',
-'jason-burns-sarah-winters-1',
-'blackmill-mt-eden-now',
-'occult-muse-premiere']
-
-energetic = ['https://soundcloud.com/anjer/the-kids-arent-alright-the-offspring',
-'https://soundcloud.com/hiroshima_13/the-offspring-youre-gonna-go-far-kid',
-'https://soundcloud.com/muhammad-havidz/cake-by-the-ocean-dnce',
-'https://soundcloud.com/nightcore-3/nightcore-all-the-things-she',
-'https://soundcloud.com/rihanna/what-now-r3hab-edit-remix',
-'https://soundcloud.com/liveyoungwildfree-1/eminem-elevator',
-'https://soundcloud.com/empire/the-game-dont-shoot-ft-rick-ross-2-chainz-diddy-fabolous-wale-dj-khaled-swizz-beatz',
-'https://soundcloud.com/medceza/tech-n9ne-feat-ceza-jl-uso',
-'https://soundcloud.com/medsic/guerilla-radio-rage-against-the-machine-cover']
-
-classic = ['https://soundcloud.com/ronaldocristiano/eine-kleine-nachtmusik',
-'https://soundcloud.com/moozar/mozart-turkish-march',
-'https://soundcloud.com/mozart/symphony-no-35-in-d-major-k-385-i-allegro-con-spirito',
-'https://soundcloud.com/rodrigovaz/johann-sebastian-bach-pachelbels-cannon-in-d-major',
-'https://soundcloud.com/thomas-gould/johann-sebastian-bach-violin',
-'https://soundcloud.com/philippe-fifi-kunz/sets/classic-bethoven']
 class Request:
     artist = ''
     album = ''
